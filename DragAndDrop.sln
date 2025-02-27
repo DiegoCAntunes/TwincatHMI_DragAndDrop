@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# TcXaeShell Solution File, Format Version 11.00
+VisualStudioVersion = 15.0.34829.251
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FE7A1B72-C5B7-4D7C-BB7D-76384D4DE8E1}") = "DragAndDrop", "DragAndDrop\DragAndDrop.hmiproj", "{FBDD12E8-E07B-49B0-96A9-E502E5CF6497}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|TwinCAT HMI = Debug|TwinCAT HMI
+		Release|TwinCAT HMI = Release|TwinCAT HMI
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{FBDD12E8-E07B-49B0-96A9-E502E5CF6497}.Debug|TwinCAT HMI.ActiveCfg = Debug|TwinCAT HMI
+		{FBDD12E8-E07B-49B0-96A9-E502E5CF6497}.Debug|TwinCAT HMI.Build.0 = Debug|TwinCAT HMI
+		{FBDD12E8-E07B-49B0-96A9-E502E5CF6497}.Release|TwinCAT HMI.ActiveCfg = Release|TwinCAT HMI
+		{FBDD12E8-E07B-49B0-96A9-E502E5CF6497}.Release|TwinCAT HMI.Build.0 = Release|TwinCAT HMI
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {72CE9C82-619E-41F8-81F4-227445E1E265}
+	EndGlobalSection
+EndGlobal
