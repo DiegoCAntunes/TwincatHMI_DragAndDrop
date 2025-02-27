@@ -1,4 +1,3 @@
-```md
 # TwinCAT HMI Drag and Drop
 
 This repository provides an example of implementing drag-and-drop functionality within Beckhoff's TwinCAT HMI framework.  
@@ -53,4 +52,3 @@ This project is licensed under the MIT License.
 - Inspiration from related projects such as [twincathmi](https://github.com/fengxing1121/twincathmi) and [TcHmiCncControls](https://github.com/Beckhoff-USA-Community/TcHmiCncControls).
 
 For more information on TwinCAT HMI, refer to the [official documentation](https://www.beckhoff.com/en-us/products/automation/twincat/texxxx-twincat-3-engineering/te2000.html).
-```
