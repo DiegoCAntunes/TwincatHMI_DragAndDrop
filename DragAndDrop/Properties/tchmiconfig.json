@@ -102,6 +102,11 @@
         "type": "tchmi:general#/definitions/REAL",
         "persist": false,
         "readonly": false
+      },
+      "YY": {
+        "type": "tchmi:project#/definitions/Array%280..0%29%20OF%20BoxCenter",
+        "persist": true,
+        "readonly": false
       }
     },
     "themedResources": {}

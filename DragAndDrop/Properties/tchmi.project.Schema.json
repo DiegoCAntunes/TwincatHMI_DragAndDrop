@@ -1,4 +1,21 @@
 {
   "$schema": "http://json-schema.org/draft-04/schema#",
-  "definitions": {}
+  "definitions": {
+    "BoxCenter": {
+      "properties": {},
+      "type": "object",
+      "title": "BoxCenter",
+      "required": [
+        "X",
+        "Y",
+        "Rotation"
+      ]
+    },
+    "Array(0..0) OF BoxCenter": {
+      "items": {
+        "$ref": "tchmi:project#/definitions/BoxCenter"
+      },
+      "type": "array"
+    }
+  }
 }
