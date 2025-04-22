@@ -8,23 +8,35 @@
         (function (DragAndDrop) {
             // Function to create a new box
             function CreateBox() {
-                const box = document.createElement('div');
-                box.setAttribute('data-tchmi-type', 'TcHmi.Controls.System.TcHmiContainer');
-                box.style.position = 'absolute';
-                box.style.width = '50px';
-                box.style.height = '50px';
-                box.style.backgroundColor = 'lightblue';
-                box.style.border = '1px solid black';
-                box.style.cursor = 'pointer';
+                var boxWidthSymbol = new TcHmi.Symbol('%i%BoxW%/i%');
 
-                // Enable dragging for the box
-                box.addEventListener('mousedown', startDrag);
-                box.addEventListener('mousemove', drag);
-                box.addEventListener('mouseup', stopDrag);
+                boxWidthSymbol.readEx(function (data) {
+                    if (data.error === TcHmi.Errors.NONE) {
+                        const width = data.value;
 
-                // Add the box to the interactive area
-                const interactiveArea = document.getElementById('TcHmiContainer_1');
-                interactiveArea.appendChild(box);
+                        const box = document.createElement('div');
+                        box.setAttribute('data-tchmi-type', 'TcHmi.Controls.System.TcHmiContainer');
+                        box.style.position = 'absolute';
+                        box.style.width = width + 'px';
+                        box.style.height = '50px';
+                        box.style.backgroundColor = 'transparent';
+                        box.style.border = '2px solid #8B4513';
+                        box.style.cursor = 'pointer';
+                        box.style.boxSizing = 'border-box';
+                        box.style.backgroundImage = 'linear-gradient(135deg, #d2b48c 25%, #c0a16b 25%, #c0a16b 50%, #d2b48c 50%, #d2b48c 75%, #c0a16b 75%, #c0a16b 100%)';
+                        box.style.boxShadow = "2px 2px 5px rgba(0,0,0,0.3)";
+
+                        // Enable dragging for the box
+                        box.addEventListener('mousedown', startDrag);
+                        box.addEventListener('mousemove', drag);
+                        box.addEventListener('mouseup', stopDrag);
+
+                        const interactiveArea = document.getElementById('TcHmiContainer_1');
+                        interactiveArea.appendChild(box);
+                    } else {
+                        console.error("Failed to read BoxW symbol:", data.error);
+                    }
+                });
             }
 
             // Variables for drag-and-drop functionality

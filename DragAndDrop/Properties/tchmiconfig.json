@@ -1,5 +1,5 @@
 {
-  "$schema": "./../../Packages/Beckhoff.TwinCAT.HMI.Framework.14.2.110/runtimes/native1.12-tchmi/Schema/TchmiConfig.Schema.json",
+  "$schema": "./../../Packages/Beckhoff.TwinCAT.HMI.Framework.14.3.133/runtimes/native1.12-tchmi/Schema/TchmiConfig.Schema.json",
   "basePath": "./Beckhoff.TwinCAT.HMI.Framework",
   "scaleMode": "None",
   "startupView": "Desktop.view",
@@ -64,6 +64,11 @@
       "name": "Functions/FunctionJS1.js",
       "description": "",
       "type": "JavaScript"
+    },
+    {
+      "name": "CSS/CssBehind1.css",
+      "description": "",
+      "type": "Stylesheet"
     }
   ],
   "userControls": [],
@@ -85,7 +90,20 @@
     }
   ],
   "symbols": {
-    "internal": {},
+    "internal": {
+      "BoxW": {
+        "value": 12,
+        "type": "tchmi:general#/definitions/INT",
+        "persist": false,
+        "readonly": false
+      },
+      "BoxL": {
+        "value": "8",
+        "type": "tchmi:general#/definitions/REAL",
+        "persist": false,
+        "readonly": false
+      }
+    },
     "themedResources": {}
   },
   "trigger": [],
