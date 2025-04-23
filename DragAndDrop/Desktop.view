@@ -56,12 +56,12 @@
 ]
 </script>
 </div>
-<div id="TcHmiDatagrid_1" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiDatagrid" data-tchmi-height="200" data-tchmi-height-unit="px" data-tchmi-left="388" data-tchmi-left-unit="px" data-tchmi-top="374" data-tchmi-top-unit="px" data-tchmi-width="370" data-tchmi-width-unit="px" data-tchmi-src-data="%i%YY%/i%">
+<div id="TcHmiDatagrid_1" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiDatagrid" data-tchmi-height="200" data-tchmi-height-unit="px" data-tchmi-left="388" data-tchmi-left-unit="px" data-tchmi-top="374" data-tchmi-top-unit="px" data-tchmi-width="370" data-tchmi-width-unit="px" data-tchmi-src-data="%s%ADS.PLC1.GVL_HMI.YY%/s%">
 <script data-tchmi-target-attribute="data-tchmi-src-column" type="application/json">
 [
   {
-    "name": "Test1",
-    "label": "Column 1",
+    "name": "X",
+    "label": "X",
     "control": "TextBlock",
     "width": 70,
     "widthUnit": "px",
@@ -73,8 +73,8 @@
     "verticalAlignment": "Center"
   },
   {
-    "name": "Test2",
-    "label": "Column 2",
+    "name": "Y",
+    "label": "Y",
     "control": "TextBlock",
     "width": 70,
     "widthUnit": "px",
@@ -87,9 +87,9 @@
     "sortable": true
   },
   {
-    "name": "Test3",
-    "label": "Column 3",
-    "control": "CheckBox",
+    "name": "Rotation",
+    "label": "Rotation",
+    "control": "TextBox",
     "width": 70,
     "widthUnit": "px",
     "resize": true,

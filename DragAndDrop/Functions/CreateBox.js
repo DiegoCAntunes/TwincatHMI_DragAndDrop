@@ -12,8 +12,8 @@
             let draggedBox = null;
 
             function CreateBox() {
-                const boxWidthSymbol = new TcHmi.Symbol('%i%BoxW%/i%');
-                const boxHeightSymbol = new TcHmi.Symbol('%i%BoxL%/i%');
+                const boxWidthSymbol = new TcHmi.Symbol('%s%ADS.PLC1.GVL_HMI.Recipe_UnitWidth%/s%');
+                const boxHeightSymbol = new TcHmi.Symbol('%s%ADS.PLC1.GVL_HMI.Recipe_UnitLength%/s%');
 
                 boxWidthSymbol.readEx(function (wData) {
                     if (wData.error === TcHmi.Errors.NONE) {
@@ -71,48 +71,127 @@
                 if (!isDragging || !draggedBox) return;
 
                 const interactiveArea = document.getElementById('TcHmiContainer_1');
-                const rect = interactiveArea.getBoundingClientRect();
+                if (!interactiveArea) return; // Safety check
+                const areaRect = interactiveArea.getBoundingClientRect();
 
-                let x = event.clientX - rect.left - offsetX;
-                let y = event.clientY - rect.top - offsetY;
+                // 1. Calculate the raw proposed style.left/top based on mouse movement
+                let proposedX = event.clientX - areaRect.left - offsetX;
+                let proposedY = event.clientY - areaRect.top - offsetY;
 
+                // --- Corrected Snapping Logic ---
                 const snapTolerance = 10;
-                const draggedRect = {
-                    left: x,
-                    top: y,
-                    right: x + draggedBox.offsetWidth,
-                    bottom: y + draggedBox.offsetHeight
-                };
+                const otherBoxes = Array.from(document.querySelectorAll('.draggable-box')).filter(b => b !== draggedBox);
+                let snappedInX = false; // Flag to allow only one snap adjustment per axis per event
+                let snappedInY = false;
 
-                const boxes = Array.from(document.querySelectorAll('.draggable-box')).filter(b => b !== draggedBox);
-                for (const box of boxes) {
-                    const r = box.getBoundingClientRect();
-                    const areaRect = interactiveArea.getBoundingClientRect();
-                    const otherRect = {
-                        left: r.left - areaRect.left,
-                        top: r.top - areaRect.top,
-                        right: r.right - areaRect.left,
-                        bottom: r.bottom - areaRect.top
-                    };
+                // Create a ghost of the dragged box at its current proposed location
+                // to get its visual bounds for snap calculations.
+                const ghostSnap = draggedBox.cloneNode(true);
+                ghostSnap.style.position = 'absolute';
+                ghostSnap.style.left = `${proposedX}px`;
+                ghostSnap.style.top = `${proposedY}px`;
+                ghostSnap.style.visibility = 'hidden';
+                interactiveArea.appendChild(ghostSnap);
+                const ghostSnapRect = ghostSnap.getBoundingClientRect();
+                interactiveArea.removeChild(ghostSnap);
 
-                    if (Math.abs(draggedRect.left - otherRect.right) < snapTolerance) {
-                        x = otherRect.right;
-                    } else if (Math.abs(draggedRect.right - otherRect.left) < snapTolerance) {
-                        x = otherRect.left - draggedBox.offsetWidth;
+                // Calculate the ghost's visual edges relative to the container
+                const ghostSnapLeft = ghostSnapRect.left - areaRect.left;
+                const ghostSnapTop = ghostSnapRect.top - areaRect.top;
+                const ghostSnapRight = ghostSnapLeft + ghostSnapRect.width;
+                const ghostSnapBottom = ghostSnapTop + ghostSnapRect.height;
+
+                for (const otherBox of otherBoxes) {
+                // Stop checking this box if we've already snapped in both X and Y
+                    if (snappedInX && snappedInY) break;
+
+                    const otherBoxRect = otherBox.getBoundingClientRect();
+                // Calculate the other box's visual edges relative to the container
+                    const otherLeft = otherBoxRect.left - areaRect.left;
+                    const otherTop = otherBoxRect.top - areaRect.top;
+                    const otherRight = otherLeft + otherBoxRect.width;
+                    const otherBottom = otherTop + otherBoxRect.height;
+
+                // Check for X-axis snaps if not already snapped in X
+                    if (!snappedInX) {
+                        // Check proximity of Ghost's Left edge to Other's Right edge
+                        if (Math.abs(ghostSnapLeft - otherRight) < snapTolerance) {
+                            const deltaX = otherRight - ghostSnapLeft; // Calculate required adjustment
+                            proposedX += deltaX; // Apply adjustment to style.left target
+                            snappedInX = true; // Set flag
+                        }
+                            // Check proximity of Ghost's Right edge to Other's Left edge
+                        else if (Math.abs(ghostSnapRight - otherLeft) < snapTolerance) {
+                            const deltaX = otherLeft - ghostSnapRight; // Calculate required adjustment
+                            proposedX += deltaX; // Apply adjustment to style.left target
+                            snappedInX = true; // Set flag
+                        }
                     }
 
-                    if (Math.abs(draggedRect.top - otherRect.bottom) < snapTolerance) {
-                        y = otherRect.bottom;
-                    } else if (Math.abs(draggedRect.bottom - otherRect.top) < snapTolerance) {
-                        y = otherRect.top - draggedBox.offsetHeight;
+                // Check for Y-axis snaps if not already snapped in Y
+                    if (!snappedInY) {
+                        // Check proximity of Ghost's Top edge to Other's Bottom edge
+                        if (Math.abs(ghostSnapTop - otherBottom) < snapTolerance) {
+                            const deltaY = otherBottom - ghostSnapTop; // Calculate required adjustment
+                            proposedY += deltaY; // Apply adjustment to style.top target
+                            snappedInY = true; // Set flag
+                        }
+                            // Check proximity of Ghost's Bottom edge to Other's Top edge
+                        else if (Math.abs(ghostSnapBottom - otherTop) < snapTolerance) {
+                            const deltaY = otherTop - ghostSnapBottom; // Calculate required adjustment
+                            proposedY += deltaY; // Apply adjustment to style.top target
+                            snappedInY = true; // Set flag
+                        }
                     }
                 }
+                // --- End Snapping Logic ---
 
-                x = Math.max(0, Math.min(x, rect.width - draggedBox.offsetWidth));
-                y = Math.max(0, Math.min(y, rect.height - draggedBox.offsetHeight));
 
-                draggedBox.style.left = `${x}px`;
-                draggedBox.style.top = `${y}px`;
+                // --- Boundary Clamping Logic (uses the potentially snapped proposedX/Y) ---
+                // 2. Create ghost (final check) to determine visual bounds at the potentially snapped location
+                const ghostFinal = draggedBox.cloneNode(true);
+                ghostFinal.style.position = 'absolute';
+                ghostFinal.style.left = `${proposedX}px`; // Use potentially snapped position
+                ghostFinal.style.top = `${proposedY}px`;
+                ghostFinal.style.visibility = 'hidden';
+                interactiveArea.appendChild(ghostFinal);
+                const ghostFinalRect = ghostFinal.getBoundingClientRect();
+                interactiveArea.removeChild(ghostFinal);
+
+                // 3. Calculate final ghost's visual bounds RELATIVE TO THE CONTAINER
+                const ghostFinalLeft = ghostFinalRect.left - areaRect.left;
+                const ghostFinalTop = ghostFinalRect.top - areaRect.top;
+                const ghostFinalRight = ghostFinalLeft + ghostFinalRect.width;
+                const ghostFinalBottom = ghostFinalTop + ghostFinalRect.height;
+                const containerWidth = areaRect.width;
+                const containerHeight = areaRect.height;
+
+                // 4. Calculate necessary adjustment (delta) for boundary clamping
+                let deltaX_boundary = 0;
+                let deltaY_boundary = 0;
+
+                if (ghostFinalLeft < 0) {
+                    deltaX_boundary = -ghostFinalLeft;
+                } else if (ghostFinalRight > containerWidth) {
+                    deltaX_boundary = containerWidth - ghostFinalRight;
+                }
+
+                if (ghostFinalTop < 0) {
+                    deltaY_boundary = -ghostFinalTop;
+                } else if (ghostFinalBottom > containerHeight) {
+                    deltaY_boundary = containerHeight - ghostFinalBottom;
+                }
+
+                // 5. Apply boundary delta to the potentially snapped position
+                const finalX = proposedX + deltaX_boundary;
+                const finalY = proposedY + deltaY_boundary;
+
+                // 6. Set the final position
+                draggedBox.style.left = `${finalX}px`;
+                draggedBox.style.top = `${finalY}px`;
+
+                // Re-run overlap check after setting final position
+                checkOverlaps();
             }
 
             function stopDrag(event) {
@@ -126,38 +205,133 @@
             function rotateBox(event) {
                 event.preventDefault();
                 const box = event.target;
-                let rotation = parseInt(box.getAttribute('data-rotation')) || 0;
-                rotation = (rotation + 90) % 360;
-                box.setAttribute('data-rotation', rotation.toString());
-                box.style.transform = `rotate(${rotation}deg)`;
 
+                // --- Shift-click removal logic ---
+                if (event.shiftKey) {
+                    box.remove();
+                    updateYYArrayFromBoxes();
+                    checkOverlaps();
+                    return;
+                }
+
+                // --- Rotation logic ---
+                let rotation = parseInt(box.getAttribute('data-rotation')) || 0;
+                rotation = rotation === 0 ? 90 : 0;
+                box.setAttribute('data-rotation', rotation.toString());
+                box.style.transform = `rotate(${rotation}deg)`; // Apply rotation FIRST
+
+                // --- Repositioning logic (using the new method) ---
+                const interactiveArea = document.getElementById('TcHmiContainer_1');
+                if (!interactiveArea) return; // Safety check
+                const areaRect = interactiveArea.getBoundingClientRect();
+
+                // Get current style.left/top as the starting point
+                let currentX = parseInt(box.style.left, 10) || 0;
+                let currentY = parseInt(box.style.top, 10) || 0;
+
+                // 2. Create ghost to determine visual bounds AFTER rotation at current position
+                const ghost = box.cloneNode(true); // Clone includes the new transform
+                ghost.style.position = 'absolute';
+                ghost.style.left = `${currentX}px`; // Use current position
+                ghost.style.top = `${currentY}px`;
+                ghost.style.visibility = 'hidden';
+                interactiveArea.appendChild(ghost);
+                const ghostRect = ghost.getBoundingClientRect();
+                interactiveArea.removeChild(ghost); // Clean up ghost
+
+                // 3. Calculate ghost's visual bounds RELATIVE TO THE CONTAINER
+                const ghostLeftInContainer = ghostRect.left - areaRect.left;
+                const ghostTopInContainer = ghostRect.top - areaRect.top;
+                const ghostRightInContainer = ghostLeftInContainer + ghostRect.width;
+                const ghostBottomInContainer = ghostTopInContainer + ghostRect.height;
+                const containerWidth = areaRect.width;
+                const containerHeight = areaRect.height;
+
+                // 4. Calculate necessary adjustment (delta)
+                let deltaX = 0;
+                let deltaY = 0;
+
+                if (ghostLeftInContainer < 0) {
+                    deltaX = -ghostLeftInContainer;
+                } else if (ghostRightInContainer > containerWidth) {
+                    deltaX = containerWidth - ghostRightInContainer;
+                }
+
+                if (ghostTopInContainer < 0) {
+                    deltaY = -ghostTopInContainer;
+                } else if (ghostBottomInContainer > containerHeight) {
+                    deltaY = containerHeight - ghostBottomInContainer;
+                }
+
+                // 5. Apply the delta to the current style.left/top
+                const finalX = currentX + deltaX;
+                const finalY = currentY + deltaY;
+
+                // 6. Set the final position
+                box.style.left = `${finalX}px`;
+                box.style.top = `${finalY}px`;
+
+                // --- Update PLC and check overlaps ---
                 updateYYArrayFromBoxes();
                 checkOverlaps();
             }
 
             function updateYYArrayFromBoxes() {
+                const interactiveArea = document.getElementById('TcHmiContainer_1');
+                if (!interactiveArea) {
+                    console.error("Container 'TcHmiContainer_1' not found for YY update.");
+                    return; // Exit if container not found
+                }
+                const areaRect = interactiveArea.getBoundingClientRect(); // Get container position/dimensions
+
                 const boxes = document.querySelectorAll('.draggable-box');
                 const resultArray = [];
+                const activeBoxesData = []; // For clearer console logging
 
                 boxes.forEach(box => {
-                    const x = parseInt(box.style.left, 10) || 0;
-                    const y = parseInt(box.style.top, 10) || 0;
-                    const width = box.offsetWidth;
-                    const height = box.offsetHeight;
+                    const boxRect = box.getBoundingClientRect(); // Get box visual position & size relative to viewport
+
+                    // Calculate the box's visual top-left corner relative to the container's top-left
+                    const boxLeftInContainer = boxRect.left - areaRect.left;
+                    const boxTopInContainer = boxRect.top - areaRect.top;
+
+                    // Use the visual dimensions directly from getBoundingClientRect
+                    const visualWidth = boxRect.width;
+                    const visualHeight = boxRect.height;
+
+                    // Calculate the visual center point relative to the container's top-left
+                    let centerX = boxLeftInContainer + visualWidth / 2; // Use let instead of const
+                    let centerY = boxTopInContainer + visualHeight / 2; // Use let instead of const
+
+                    // *** Add rounding here ***
+                    centerX = Math.round(centerX * 100) / 100;
+                    centerY = Math.round(centerY * 100) / 100;
+                    // *** End of rounding ***
+
+                    // Get the rotation state from the attribute
                     const rotation = parseInt(box.getAttribute('data-rotation')) || 0;
 
-                    const centerX = x + width / 2;
-                    const centerY = y + height / 2;
-
-                    resultArray.push({ X: centerX, Y: centerY, Rotation: rotation });
+                    // Store the rounded data
+                    const boxData = { X: centerX, Y: centerY, Rotation: rotation };
+                    resultArray.push(boxData);
+                    activeBoxesData.push(boxData); // Add to log array
                 });
 
-                console.log('YY =', resultArray);
+                // --- Padding the array for the PLC ---
+                const maxLength = 101; // Make sure this matches your PLC array GVL_HMI.YY dimension (e.g., ARRAY [0..100])
+                while (resultArray.length < maxLength) {
+                    resultArray.push({ X: 0, Y: 0, Rotation: 0 }); // Use appropriate default values
+                }
 
-                const symbol = new TcHmi.Symbol('%s%YY%/s%');
+                // Log only the data for boxes actually present for easier debugging
+                console.log('Updating YY with (first', activeBoxesData.length, 'are active):', activeBoxesData);
+
+                // --- Writing to the PLC symbol ---
+                const symbol = new TcHmi.Symbol('%s%ADS.PLC1.GVL_HMI.YY%/s%');
                 symbol.writeEx(resultArray, function (data) {
                     if (data.error !== TcHmi.Errors.NONE) {
-                        console.error("Failed to write to YY array:", data.error);
+                        // Log the error code and its name if available
+                        console.error("Failed to write to YY array:", data.error, TcHmi.Errors[data.error] || 'Unknown Error');
                     }
                 });
             }
@@ -182,12 +356,18 @@
             }
 
             function isOverlapping(rect1, rect2) {
-                return !(
-                    rect1.right <= rect2.left ||
-                    rect1.left >= rect2.right ||
-                    rect1.bottom <= rect2.top ||
-                    rect1.top >= rect2.bottom
+                const epsilon = 0.01; // A small tolerance in pixels for floating point checks
+
+                // Check if they are separated (allowing for the tolerance)
+                const separated = (
+                    (rect1.right - epsilon) <= rect2.left ||  // rect1 is essentially left of rect2
+                    (rect1.left + epsilon) >= rect2.right || // rect1 is essentially right of rect2
+                    (rect1.bottom - epsilon) <= rect2.top || // rect1 is essentially above rect2
+                    (rect1.top + epsilon) >= rect2.bottom    // rect1 is essentially below rect2
                 );
+
+                // If they are not separated, they are overlapping
+                return !separated;
             }
 
             DragAndDrop.CreateBox = CreateBox;

@@ -27,7 +27,67 @@
     "DEFAULTLOCALE": "client",
     "DEFAULTTIMEFORMATLOCALE": "client",
     "DEFAULTTIMEZONE": "client",
-    "DEFINITIONS": {},
+    "DEFINITIONS": {
+        "ADS": {
+            "ADS-PLC1.ARRAY_0..100_OF-Test_BoxCenter": {
+                "items": {
+                    "$ref": "tchmi:server#/definitions/ADS-PLC1.Test_BoxCenter"
+                },
+                "maxItems": 101,
+                "minItems": 101,
+                "type": "array"
+            },
+            "ADS-PLC1.ARRAY_0..250_OF-Test_BoxCenter": {
+                "items": {
+                    "$ref": "tchmi:server#/definitions/ADS-PLC1.Test_BoxCenter"
+                },
+                "maxItems": 251,
+                "minItems": 251,
+                "type": "array"
+            },
+            "ADS-PLC1.Test_BoxCenter": {
+                "additionalProperties": false,
+                "properties": {
+                    "Rotation": {
+                        "allOf": [
+                            {
+                                "$ref": "tchmi:general#/definitions/INT"
+                            },
+                            {
+                                "propertyOrder": 3
+                            }
+                        ]
+                    },
+                    "X": {
+                        "allOf": [
+                            {
+                                "$ref": "tchmi:general#/definitions/REAL"
+                            },
+                            {
+                                "propertyOrder": 1
+                            }
+                        ]
+                    },
+                    "Y": {
+                        "allOf": [
+                            {
+                                "$ref": "tchmi:general#/definitions/REAL"
+                            },
+                            {
+                                "propertyOrder": 2
+                            }
+                        ]
+                    }
+                },
+                "required": [
+                    "X",
+                    "Y",
+                    "Rotation"
+                ],
+                "type": "object"
+            }
+        }
+    },
     "DEFLATECOMPRESSIONLEVEL": 5,
     "DIAGNOSTICS_DOMAINS": [],
     "DISABLED_CONFIGURATION_HINTS": [],
@@ -686,6 +746,53 @@
             },
             "USEMAPPING": true
         },
+        "ADS.PLC1.GVL_HMI.Recipe_UnitHeight": {
+            "ACCESS": 3,
+            "DOMAIN": "ADS",
+            "DYNAMIC": true,
+            "MAPPING": "PLC1::GVL_HMI::Recipe_UnitHeight",
+            "SCHEMA": {
+                "$ref": "tchmi:general#/definitions/REAL"
+            },
+            "USEMAPPING": true
+        },
+        "ADS.PLC1.GVL_HMI.Recipe_UnitLength": {
+            "ACCESS": 3,
+            "DOMAIN": "ADS",
+            "DYNAMIC": true,
+            "MAPPING": "PLC1::GVL_HMI::Recipe_UnitLength",
+            "SCHEMA": {
+                "$ref": "tchmi:general#/definitions/REAL"
+            },
+            "USEMAPPING": true
+        },
+        "ADS.PLC1.GVL_HMI.Recipe_UnitWidth": {
+            "ACCESS": 3,
+            "DOMAIN": "ADS",
+            "DYNAMIC": true,
+            "MAPPING": "PLC1::GVL_HMI::Recipe_UnitWidth",
+            "SCHEMA": {
+                "$ref": "tchmi:general#/definitions/REAL"
+            },
+            "USEMAPPING": true
+        },
+        "ADS.PLC1.GVL_HMI.YY": {
+            "ACCESS": 3,
+            "DOMAIN": "ADS",
+            "DYNAMIC": true,
+            "MAPPING": "PLC1::GVL_HMI::YY",
+            "SCHEMA": {
+                "allOf": [
+                    {
+                        "comment": "Test"
+                    },
+                    {
+                        "$ref": "tchmi:server#/definitions/ADS-PLC1.ARRAY_0..100_OF-Test_BoxCenter"
+                    }
+                ]
+            },
+            "USEMAPPING": true
+        },
         "ADS.RuntimePorts": {
             "ACCESS": 3,
             "DOMAIN": "ADS",
@@ -1047,60 +1154,6 @@
                 }
             },
             "USEMAPPING": true
-        },
-        "BoxWid": {
-            "ACCESS": 3,
-            "DOMAIN": "TcHmiSrv",
-            "DYNAMIC": true,
-            "MAPPING": "",
-            "OPTIONS": {},
-            "SCHEMA": {
-                "allOf": [
-                    {
-                        "$ref": "tchmi:general#/definitions/REAL"
-                    },
-                    {
-                        "default": "12"
-                    }
-                ]
-            },
-            "USEMAPPING": false
-        },
-        "BoxWidt": {
-            "ACCESS": 3,
-            "DOMAIN": "TcHmiSrv",
-            "DYNAMIC": true,
-            "MAPPING": "",
-            "OPTIONS": {},
-            "SCHEMA": {
-                "allOf": [
-                    {
-                        "$ref": "tchmi:general#/definitions/REAL"
-                    },
-                    {
-                        "default": "12"
-                    }
-                ]
-            },
-            "USEMAPPING": false
-        },
-        "Boxbox": {
-            "ACCESS": 3,
-            "DOMAIN": "TcHmiSrv",
-            "DYNAMIC": true,
-            "MAPPING": "",
-            "OPTIONS": {},
-            "SCHEMA": {
-                "allOf": [
-                    {
-                        "$ref": "tchmi:general#/definitions/REAL"
-                    },
-                    {
-                        "default": "12"
-                    }
-                ]
-            },
-            "USEMAPPING": false
         },
         "ChangeUserSettings": {
             "ACCESS": 3,
@@ -2863,26 +2916,6 @@
             },
             "USEMAPPING": true
         },
-        "SSS": {
-            "ACCESS": 3,
-            "DOMAIN": "TcHmiSrv",
-            "DYNAMIC": true,
-            "MAPPING": "",
-            "OPTIONS": {
-                "persistedOfflineValue": "12"
-            },
-            "SCHEMA": {
-                "allOf": [
-                    {
-                        "$ref": "tchmi:general#/definitions/REAL"
-                    },
-                    {
-                        "default": "12"
-                    }
-                ]
-            },
-            "USEMAPPING": false
-        },
         "SetConfiguration": {
             "ACCESS": 3,
             "DOMAIN": "TcHmiSrv",
@@ -3716,6 +3749,10 @@
                 "ADS.AdsSyncReadStateReq": 3,
                 "ADS.CheckLicense": 3,
                 "ADS.Diagnostics": 3,
+                "ADS.PLC1.GVL_HMI.Recipe_UnitHeight": 3,
+                "ADS.PLC1.GVL_HMI.Recipe_UnitLength": 3,
+                "ADS.PLC1.GVL_HMI.Recipe_UnitWidth": 3,
+                "ADS.PLC1.GVL_HMI.YY": 3,
                 "BoxWid": 3,
                 "BoxWidt": 3,
                 "Boxbox": 3,
