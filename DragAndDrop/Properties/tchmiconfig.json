@@ -69,6 +69,11 @@
       "name": "CSS/CssBehind1.css",
       "description": "",
       "type": "Stylesheet"
+    },
+    {
+      "name": "Functions/SaveLayerStyle.js",
+      "description": "",
+      "type": "JavaScript"
     }
   ],
   "userControls": [],
@@ -87,25 +92,70 @@
     },
     {
       "url": "Functions/FunctionJS1.js"
+    },
+    {
+      "url": "Functions/SaveLayerStyle.js"
     }
   ],
   "symbols": {
     "internal": {
-      "BoxW": {
-        "value": 12,
+      "LL": {
+        "type": "tchmi:project#/definitions/Array%280..0%29%20OF%20BoxCenter",
+        "persist": true,
+        "readonly": false
+      },
+      "InternalSavedLayerStylesJson": {
+        "value": "",
+        "type": "tchmi:general#/definitions/String",
+        "persist": false,
+        "readonly": false
+      },
+      "InternalLayerAssignmentsJson": {
+        "value": "",
+        "type": "tchmi:general#/definitions/String",
+        "persist": false,
+        "readonly": false
+      },
+      "InternalLayerCount": {
+        "value": 5,
         "type": "tchmi:general#/definitions/INT",
         "persist": false,
         "readonly": false
       },
-      "BoxL": {
-        "value": "8",
-        "type": "tchmi:general#/definitions/REAL",
+      "CurrentLayout": {
+        "value": 1,
+        "type": "tchmi:general#/definitions/INT",
         "persist": false,
         "readonly": false
       },
-      "YY": {
-        "type": "tchmi:project#/definitions/Array%280..0%29%20OF%20BoxCenter",
-        "persist": true,
+      "CurrentLL": {
+        "type": "tchmi:project#/definitions/Array%280..99%29%20OF%20PLC1.Test_BoxCenter",
+        "persist": false,
+        "readonly": false
+      },
+      "L1": {
+        "type": "tchmi:project#/definitions/Array%280..99%29%20OF%20PLC1.Test_BoxCenter",
+        "persist": false,
+        "readonly": false
+      },
+      "L3": {
+        "type": "tchmi:project#/definitions/Array%280..99%29%20OF%20PLC1.Test_BoxCenter",
+        "persist": false,
+        "readonly": false
+      },
+      "L2": {
+        "type": "tchmi:project#/definitions/Array%280..99%29%20OF%20PLC1.Test_BoxCenter",
+        "persist": false,
+        "readonly": false
+      },
+      "L4": {
+        "type": "tchmi:project#/definitions/Array%280..99%29%20OF%20PLC1.Test_BoxCenter",
+        "persist": false,
+        "readonly": false
+      },
+      "L5": {
+        "type": "tchmi:project#/definitions/Array%280..99%29%20OF%20PLC1.Test_BoxCenter",
+        "persist": false,
         "readonly": false
       }
     },

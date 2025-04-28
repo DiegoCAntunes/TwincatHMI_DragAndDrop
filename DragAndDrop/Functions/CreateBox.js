@@ -46,7 +46,7 @@
                                 const interactiveArea = document.getElementById('TcHmiContainer_1');
                                 interactiveArea.appendChild(box);
 
-                                updateYYArrayFromBoxes();
+                                updateLLArrayFromBoxes();
                                 checkOverlaps();
                             } else {
                                 console.error("Failed to read BoxL symbol:", hData.error);
@@ -197,7 +197,7 @@
             function stopDrag(event) {
                 if (!isDragging || !draggedBox) return;
                 isDragging = false;
-                updateYYArrayFromBoxes();
+                updateLLArrayFromBoxes();
                 checkOverlaps();
                 draggedBox = null;
             }
@@ -209,7 +209,7 @@
                 // --- Shift-click removal logic ---
                 if (event.shiftKey) {
                     box.remove();
-                    updateYYArrayFromBoxes();
+                    updateLLArrayFromBoxes();
                     checkOverlaps();
                     return;
                 }
@@ -272,11 +272,11 @@
                 box.style.top = `${finalY}px`;
 
                 // --- Update PLC and check overlaps ---
-                updateYYArrayFromBoxes();
+                updateLLArrayFromBoxes();
                 checkOverlaps();
             }
 
-            function updateYYArrayFromBoxes() {
+            function updateLLArrayFromBoxes() {
                 const interactiveArea = document.getElementById('TcHmiContainer_1');
                 if (!interactiveArea) {
                     console.error("Container 'TcHmiContainer_1' not found for YY update.");
@@ -318,16 +318,16 @@
                 });
 
                 // --- Padding the array for the PLC ---
-                const maxLength = 101; // Make sure this matches your PLC array GVL_HMI.YY dimension (e.g., ARRAY [0..100])
+                const maxLength = 100; // Make sure this matches your PLC array GVL_HMI.YY dimension (e.g., ARRAY [0..100])
                 while (resultArray.length < maxLength) {
                     resultArray.push({ X: 0, Y: 0, Rotation: 0 }); // Use appropriate default values
-                }
+                } 
 
                 // Log only the data for boxes actually present for easier debugging
-                console.log('Updating YY with (first', activeBoxesData.length, 'are active):', activeBoxesData);
+                console.log('Updating YY with (first', activeBoxesData.length, 'are active):', activeBoxesData); 
 
                 // --- Writing to the PLC symbol ---
-                const symbol = new TcHmi.Symbol('%s%ADS.PLC1.GVL_HMI.YY%/s%');
+                const symbol = new TcHmi.Symbol('%i%CurrentLL%/i%');
                 symbol.writeEx(resultArray, function (data) {
                     if (data.error !== TcHmi.Errors.NONE) {
                         // Log the error code and its name if available

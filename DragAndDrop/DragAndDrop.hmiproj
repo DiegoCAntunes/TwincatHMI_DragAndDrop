@@ -140,6 +140,7 @@
     <Folder Include="Localization" />
     <Folder Include="Functions" />
     <Folder Include="CSS" />
+    <Folder Include="Server\TcHmiRecipeManagement" />
     <Folder Include="Themes" />
     <Folder Include="Themes\Base-Dark\Images\" />
     <Folder Include="Themes\Base\" />
@@ -168,6 +169,13 @@
     <Content Include="Functions\FunctionJS1.js">
       <SubType>Content</SubType>
     </Content>
+    <Content Include="Functions\SaveLayerStyle.function.json">
+      <SubType>Content</SubType>
+      <DependentUpon>Functions\SaveLayerStyle.js</DependentUpon>
+    </Content>
+    <Content Include="Functions\SaveLayerStyle.js">
+      <SubType>Content</SubType>
+    </Content>
     <Content Include="packages.config">
       <SubType>Content</SubType>
     </Content>
@@ -178,6 +186,15 @@
       <SubType>Content</SubType>
     </Content>
     <Content Include="Server\TcHmiLua\TcHmiLua.Storage.json">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Server\TcHmiRecipeManagement\TcHmiRecipeManagement.Config.default.json">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Server\TcHmiRecipeManagement\TcHmiRecipeManagement.Config.remote.json">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Server\TcHmiRecipeManagement\TcHmiRecipeManagement.Storage.json">
       <SubType>Content</SubType>
     </Content>
     <Content Include="Server\TcHmiSqliteLogger\TcHmiSqliteLogger.Config.default.json">

@@ -16,6 +16,71 @@
         "$ref": "tchmi:project#/definitions/BoxCenter"
       },
       "type": "array"
+    },
+    "Array(0..0) OF Array": {
+      "items": {
+        "$ref": "tchmi:general#/definitions/Array"
+      },
+      "type": "array",
+      "title": "TestArrayArray"
+    },
+    "Array(0..99) OF BoxCenter": {
+      "items": {
+        "$ref": "tchmi:project#/definitions/BoxCenter"
+      },
+      "type": "array",
+      "minItems": 100,
+      "maxItems": 100,
+      "title": "FArrayBoxCenter"
+    },
+    "PLC1.Test_BoxCenter": {
+      "additionalProperties": {},
+      "properties": {
+        "Rotation": {
+          "allOf": [
+            {
+              "$ref": "tchmi:general#/definitions/INT"
+            },
+            {
+              "propertyOrder": 3
+            }
+          ]
+        },
+        "X": {
+          "allOf": [
+            {
+              "$ref": "tchmi:general#/definitions/REAL"
+            },
+            {
+              "propertyOrder": 1
+            }
+          ]
+        },
+        "Y": {
+          "allOf": [
+            {
+              "$ref": "tchmi:general#/definitions/REAL"
+            },
+            {
+              "propertyOrder": 2
+            }
+          ]
+        }
+      },
+      "type": "object",
+      "required": [
+        "X",
+        "Y",
+        "Rotation"
+      ]
+    },
+    "Array(0..99) OF PLC1.Test_BoxCenter": {
+      "items": {
+        "$ref": "tchmi:project#/definitions/PLC1.Test_BoxCenter"
+      },
+      "type": "array",
+      "minItems": 100,
+      "maxItems": 100
     }
   }
 }

@@ -1,0 +1,7 @@
+28-04-2025 09:46:29 DragAndDrop: remove definitions
+-----------------------------------------------------------
+ADS-PLC1.ARRAY_0..100_OF-Test_BoxCenter,
+ADS-PLC1.ARRAY_0..250_OF-Test_BoxCenter,
+ADS-PLC1.ARRAY_0..500_OF-Test_BoxCenter,
+ADS-PLC1.ARRAY_0..9_OF-ARRAY_0..99_OF-Test_BoxCenter
+-----------------------------------------------------------
